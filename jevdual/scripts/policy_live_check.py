@@ -29,12 +29,14 @@ def menu() -> Menu:
 
 
 async def main() -> int:
-    if not os.environ.get("TYPESAFE_API_KEY"):
-        print("TYPESAFE_API_KEY not set; skipping live check")
-        return 0
-    from typesafe_sdk import AsyncTypeSafeClient
+    from jevdual.keys import load_keys
+    from jevdual.provider import has_jev_key, make_jev_client
 
-    async with AsyncTypeSafeClient() as client:
+    if not has_jev_key(load_keys()):
+        print("TYPESAFE_API_KEY or OPENJEV_API_KEY not set; skipping live check")
+        return 0
+
+    async with make_jev_client() as client:
         policy = JevPolicy(client)
         d = await policy.decide(
             menu(), StepContext(task="Open the About page", requirements=("About page is open",))

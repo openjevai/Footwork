@@ -22,6 +22,7 @@ from pydantic import BaseModel, Field
 from typesafe_sdk import Choice, Noul
 
 from jevdual.policy import JEV_MODEL, PolicyError
+from jevdual.provider import jev_model
 
 log = logging.getLogger("jevdual.evidence")
 
@@ -67,9 +68,9 @@ def _choice_probs(answer: Any) -> dict[str, float]:
 
 
 class EvidenceSelector:
-    def __init__(self, client: Any, *, model: str = JEV_MODEL):
+    def __init__(self, client: Any, *, model: str | None = None):
         self.client = client
-        self.model = model
+        self.model = model or jev_model(JEV_MODEL)
         self.calls = 0
 
     async def _ask(self, state: dict[str, Any], questions: dict[str, Any]) -> Any:

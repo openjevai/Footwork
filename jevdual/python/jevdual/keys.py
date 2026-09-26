@@ -6,9 +6,15 @@ environment variables when the variables are not already set, and never logs
 or returns the values.
 
 Files and the variables they feed:
-  TYPESAFE_API_KEY     -> TYPESAFE_API_KEY   (System 1: Jev)
+  TYPESAFE_API_KEY     -> TYPESAFE_API_KEY   (System 1: Jev, TypeSafe)
+  OPENJEV_API_KEY      -> OPENJEV_API_KEY    (System 1: Jev, OpenJEV gateway; optional)
   META_MODEL_API_KEY   -> MODEL_API_KEY      (System 2: Meta Model API, Muse Spark)
   OPENAI_API_KEY       -> OPENAI_API_KEY     (optional text helper)
+
+OpenJEV (https://openjev.sh) is a free community gateway to the same Jev model.
+When only ``OPENJEV_API_KEY`` is present (or ``JEV_PROVIDER=openjev`` is set),
+``load_keys`` maps the SDK env vars onto OpenJEV so TypeSafe stays the default
+but OpenJEV works without any other code change; see ``jevdual.provider``.
 """
 
 from __future__ import annotations
@@ -16,9 +22,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from jevdual.provider import apply_provider_env
+
 KEY_DIR = Path(os.environ.get("JEVDUAL_KEY_DIR", Path.home() / ".config" / "jevdual"))
 FILES = {
     "TYPESAFE_API_KEY": "TYPESAFE_API_KEY",
+    "OPENJEV_API_KEY": "OPENJEV_API_KEY",
     "META_MODEL_API_KEY": "MODEL_API_KEY",
     "OPENAI_API_KEY": "OPENAI_API_KEY",
 }
@@ -50,4 +59,8 @@ def load_keys() -> dict[str, bool]:
         os.environ.setdefault("JEVDUAL_TEXT_BASE_URL", META_BASE_URL)
         os.environ.setdefault("JEVDUAL_TEXT_API_KEY", os.environ["MODEL_API_KEY"])
         os.environ.setdefault("JEVDUAL_TEXT_MODEL", MUSE_CONTRIBUTOR)
+    # OpenJEV: when selected, point the TypeSafe SDK env vars at the community gateway
+    # so every AsyncTypeSafeClient() call site works unchanged (TypeSafe stays default).
+    if apply_provider_env() and not present.get("TYPESAFE_API_KEY"):
+        present["TYPESAFE_API_KEY"] = True
     return present

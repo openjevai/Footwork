@@ -107,6 +107,11 @@ uv run python -m evals.runner --split dev --arm stock --arm dual --llm meta
 Keys are files under `~/.config/jevdual` (`TYPESAFE_API_KEY`, `META_MODEL_API_KEY`), materialized
 from the Sift vault; `jevdual/keys.py` exports them. Requires Rust 1.95 and Python 3.11+.
 
+OpenJEV (https://openjev.sh) is a free community gateway to the same Jev model. To use it instead of
+TypeSafe, place an `OPENJEV_API_KEY` file under `~/.config/jevdual` (or export `OPENJEV_API_KEY`), or set
+`JEV_PROVIDER=openjev` to force it even when a TypeSafe key is also present. TypeSafe remains the default
+when `TYPESAFE_API_KEY` is set; see `python/jevdual/provider.py`.
+
 ## Credits
 
 Ideas from the MIT-licensed jev-ultrafast, fastbrowse, jev-browser, jev-for-chrome and

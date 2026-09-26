@@ -17,6 +17,8 @@ The Python package is `jevdual` (in [`jevdual/`](jevdual/)); Footwork is the pro
 from a run directory under [`jevdual/results/`](jevdual/results/), and every experiment was pre-registered in
 [`jevdual/docs/experiments/`](jevdual/docs/experiments/) before it ran.
 
+> **OpenJEV support:** Jev is built by [TypeSafe](https://typesafe.ai). This fork keeps TypeSafe as the default and adds optional support for [OpenJEV](https://openjev.sh), a free community gateway to the same Jev model — set `OPENJEV_API_KEY` (or `JEV_PROVIDER=openjev`) to use it. Original project: https://github.com/Tom-R-Main/Footwork by @Tom-R-Main.
+
 ## Drive it
 
 ```sh

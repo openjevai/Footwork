@@ -42,6 +42,7 @@ from jevdual._native import native_or_pure
 from jevdual.ledger import Ledger, trajectory_from_agent
 from jevdual.menu import Menu
 from jevdual.policy import DEFAULT_RETRY, JEV_MODEL, PolicyError, SystemOneClient
+from jevdual.provider import jev_model
 
 log = logging.getLogger("jevdual.verify")
 
@@ -281,12 +282,12 @@ class Verifier:
         self,
         client: SystemOneClient,
         *,
-        model: str = JEV_MODEL,
+        model: str | None = None,
         policy: VerifyPolicy | None = None,
         retry: RetryPolicy | None = DEFAULT_RETRY,
     ):
         self.client = client
-        self.model = model
+        self.model = model or jev_model(JEV_MODEL)
         self.policy = policy or VerifyPolicy()
         self.retry = retry
 

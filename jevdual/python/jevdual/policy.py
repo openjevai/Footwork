@@ -38,6 +38,7 @@ from typesafe_sdk import (
 
 from jevdual import menu as menu_mod
 from jevdual import prompts
+from jevdual.provider import jev_model
 from jevdual.menu import (
     OPERATIONS,
     REQUEST_TOKEN_BUDGET,
@@ -192,12 +193,12 @@ class JevPolicy:
         self,
         client: SystemOneClient,
         *,
-        model: str = JEV_MODEL,
+        model: str | None = None,
         budget: MenuBudget | None = None,
         retry: RetryPolicy | None = DEFAULT_RETRY,
     ):
         self.client = client
-        self.model = model
+        self.model = model or jev_model(JEV_MODEL)
         self.budget = budget or MenuBudget()
         self.retry = retry
 
